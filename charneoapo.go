@@ -61,6 +61,36 @@ func (w *Neoapo) Do(page string) error {
 	return nil
 }
 
+func (w *Neoapo) Name() (r string) {
+	w.doc.Find(`dl dt:contains(名前)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
+
+func (w *Neoapo) Kana() (r string) {
+	w.doc.Find(`dl dt:contains(名前)`).Each(func(i int, s *gq.Selection) {
+		r, _ = s.Next().Attr("title")
+		r = str.Clean(r)
+	})
+	return
+}
+
+func (w *Neoapo) Product() (r string) {
+	var ok bool
+	w.doc.Find(`.profile_related a`).Each(func(i int, s *gq.Selection) {
+		if r != "" {
+			return
+		}
+		r, ok = s.ChildrenFiltered("img").Attr("title")
+		if !ok {
+			return
+		}
+		r = str.Clean(r)
+	})
+	return
+}
+
 func (w *Neoapo) Birthday() (r time.Time) {
 	w.doc.Find(`dl dt:contains(誕生日)`).Each(func(i int, s *gq.Selection) {
 		r, _ = time.Parse("2006年1月2日", str.MustClean(s.Next().Text()))
@@ -75,11 +105,13 @@ func (w *Neoapo) Blood() (r string) {
 	return
 }
 
+var reNum = regexp.MustCompile(`(\d+)`)
+
 func (w *Neoapo) Height() (r int) {
 	w.doc.Find(`dl dt:contains(身長)`).Each(func(i int, s *gq.Selection) {
 		text := s.Next().Text()
 		if strings.Contains(text, w.Unit) {
-			r, _ = convert.StrTo(str.Clean(strings.Replace(text, w.Unit, "", -1))).Int()
+			r, _ = convert.StrTo(str.Clean(reNum.FindString(text))).Int()
 		}
 	})
 	return
@@ -110,8 +142,6 @@ func (w *Neoapo) BWH() (r string) {
 	})
 	return
 }
-
-var reNum = regexp.MustCompile(`(\d+)`)
 
 func (w *Neoapo) Bust() (r int) {
 	bhw := strings.Split(w.BWH(), "/")
@@ -154,5 +184,12 @@ func (w *Neoapo) Bracup() (r string) {
 	}
 
 	r = strings.ToUpper(str.Clean(r))
+	return
+}
+
+func (w *Neoapo) Comment() (r string) {
+	w.doc.Find(`dl dt:contains(コメント)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Next().Text())
+	})
 	return
 }
