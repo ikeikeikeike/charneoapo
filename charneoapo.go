@@ -193,3 +193,45 @@ func (w *Neoapo) Comment() (r string) {
 	})
 	return
 }
+
+func (w *Neoapo) AnimeName() (r string) {
+	w.doc.Find(`dl dt:contains(作品名)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
+
+func (w *Neoapo) AnimeAlias() (r string) {
+	w.doc.Find(`dl dt:contains(通名\/略称)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
+
+func (w *Neoapo) AnimeAuthor() (r string) {
+	w.doc.Find(`dl dt:contains(原作者)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
+
+func (w *Neoapo) AnimeWorks() (r string) {
+	w.doc.Find(`dl dt:contains(制作会社)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
+
+func (w *Neoapo) AnimeRelease() (r time.Time) {
+	w.doc.Find(`dl dt:contains(制作年)`).Each(func(i int, s *gq.Selection) {
+		r, _ = time.Parse("2006", str.MustClean(s.Next().Text()))
+	})
+	return
+}
+
+func (w *Neoapo) AnimeUrl() (r string) {
+	w.doc.Find(`dl dt:contains(公式サイト)`).Each(func(i int, s *gq.Selection) {
+		r = str.Clean(s.Next().Text())
+	})
+	return
+}
