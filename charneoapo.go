@@ -15,7 +15,7 @@ import (
 	"github.com/ikeikeikeike/gopkg/str"
 )
 
-const EndPoint = "http://neoapo.com/characters"
+const EndPoint = "http://neoapo.com"
 
 func tee(r io.Reader, debug bool) io.Reader {
 	if !debug {
@@ -40,8 +40,8 @@ func NewNeoapo() *Neoapo {
 	}
 }
 
-func (w *Neoapo) Doc(page string) (*gq.Document, error) {
-	resp, err := w.Behave(EndPoint + "/" + url.QueryEscape(page))
+func (w *Neoapo) Doc(url string) (*gq.Document, error) {
+	resp, err := w.Behave(url)
 	if err != nil {
 		return nil, err
 	}
@@ -50,8 +50,8 @@ func (w *Neoapo) Doc(page string) (*gq.Document, error) {
 	return gq.NewDocumentFromResponse(resp)
 }
 
-func (w *Neoapo) Do(page string) error {
-	doc, err := w.Doc(page)
+func (w *Neoapo) Do(path, page string) error {
+	doc, err := w.Doc(EndPoint + "/" + path + "/" + url.QueryEscape(page))
 
 	if err != nil {
 		return err
