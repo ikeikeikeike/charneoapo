@@ -5,7 +5,7 @@ import "testing"
 func TestSimple(t *testing.T) {
 	c := NewNeoapo()
 
-	err := c.Do("2100101")
+	err := c.Do("characters", "16222")
 
 	if err != nil {
 		t.Fatal(err)
