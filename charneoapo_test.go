@@ -59,3 +59,41 @@ func TestSimple(t *testing.T) {
 		t.Errorf("Unexpected Neoapo.Comment: %s", c.Comment())
 	}
 }
+
+func TestProduct(t *testing.T) {
+	c := NewNeoapo()
+
+	err := c.Do("animes", "33")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if c.AnimeName() != "アイドルマスター THE IDOLM@STER" {
+		t.Errorf("Unexpected Neoapo.AnimeName: %s", c.AnimeName())
+	}
+
+	if c.AnimeAlias() != "アイマス" {
+		t.Errorf("Unexpected Neoapo.AnimeAlias: %s", c.AnimeAlias())
+	}
+
+	if c.AnimeAuthor() != "NAMCO" {
+		t.Errorf("Unexpected Neoapo.AnimeAuthor: %s", c.AnimeAuthor())
+	}
+
+	if c.AnimeWorks() != "A-1 Pictures" {
+		t.Errorf("Unexpected Neoapo.AnimeWorks: %s", c.AnimeWorks())
+	}
+
+	if c.AnimeRelease().Unix() != 1293840000 {
+		t.Errorf("Unexpected Neoapo.AnimeRelease: %s", c.AnimeRelease())
+	}
+
+	if c.AnimeUrl() != "http://www.idolmaster-anime.jp/" {
+		t.Errorf("Unexpected Neoapo.AnimeUrl: %s", c.AnimeUrl())
+	}
+
+	if c.Comment() != "雑居ビルの3階に事務所を構える「765プロダクション」に所属するアイドル候補生たちが、一人前のアイドルへと成長していくさまを描く。本作は原作ゲームの設定やエピソードを取りいれつつも、全体としてはアニメ版独自のストーリーを描いている。" {
+		t.Errorf("Unexpected Neoapo.Comment: %s", c.Comment())
+	}
+}
